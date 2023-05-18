@@ -89,7 +89,7 @@ class CloudinaryApiClient extends CloudinaryApi {
           )
         : (file!.startsWith('http://') || file.startsWith('https://'))
             ? file
-            : await MultipartFile.fromFile(file!, filename: fileName);
+            : await MultipartFile.fromFile(file, filename: fileName);
     params['timestamp'] = timeStamp;
     params['signature'] = getSignature(secret: apiSecret, timeStamp: timeStamp, params: params);
 
@@ -165,7 +165,9 @@ class CloudinaryApiClient extends CloudinaryApi {
     params['file'] = fileBytes != null
         ? MultipartFile.fromBytes(fileBytes,
             filename: fileName ?? DateTime.now().millisecondsSinceEpoch.toString())
-        : await MultipartFile.fromFile(file!, filename: fileName);
+        : (file!.startsWith('http://') || file.startsWith('https://'))
+            ? file
+            : await MultipartFile.fromFile(file, filename: fileName);
 
     var formData = FormData.fromMap(params);
 
